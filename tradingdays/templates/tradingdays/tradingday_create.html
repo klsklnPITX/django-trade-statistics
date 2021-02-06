@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+  
+{% block content %}
 <a href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
 <hr>
 <h1>Create a new trading day</h1>
@@ -6,3 +9,4 @@
   {{ form.as_p }}
   <button type="submit">Submit</button>
 </form>
+{% endblock content%}

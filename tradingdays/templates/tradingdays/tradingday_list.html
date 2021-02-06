@@ -2,35 +2,41 @@
   
 {% block content %}
 <section class="text-gray-600 body-font">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="flex flex-col text-center w-full mb-20">
-      <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Trading Days</h1>
-      <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Here are all trading days listed</p>
+  <div class="container px-5 py-24 mx-auto flex flex-wrap">
+    <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
+      <div>
+        <h1 class="text-4xl text-gray-800">Trading Days</h1>
+      </div>
+      <div>
+        <a class="text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-create' %}">Add a new trading day</a>
+      </div>
     </div>
-    <div class="lg:w-2/3 w-full mx-auto overflow-auto">
-      <table class="table-auto w-full text-left whitespace-no-wrap">
-        <thead>
-          <tr>
-            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Date</th>
-            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Profit/Loss</th>
-            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for tradingday in tradingdays %}
+    <div class="container px-5 py-24 mx-auto">
+      <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+        <table class="table-auto w-full text-left whitespace-no-wrap">
+          <thead>
             <tr>
-              <td class="px-4 py-3">{{ tradingday.date_created }}</td>
-              <td class="px-4 py-3">{{ tradingday.profit }}</td>
-              <td class="px-4 py-3">
-                <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
-                  Details
-                </a>
-              </td>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Date</th>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Profit/Loss</th>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"></th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for tradingday in tradingdays %}
+              <tr>
+                <td class="px-4 py-3">{{ tradingday.date_created }}</td>
+                <td class="px-4 py-3">{{ tradingday.profit }}</td>
+                <td class="px-4 py-3">
+                  <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                    Details
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+</div>
 </section>
 {% endblock content %}

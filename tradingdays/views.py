@@ -1,12 +1,25 @@
 from django.db.models import query
 from django.views import generic
 from django.shortcuts import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import TradingDay
-from .forms import TradingDayModelForm
+from .forms import CustomUserCreationForm, TradingDayModelForm, CustomUserCreationForm
 
 
-class TradingDayListView(generic.ListView):
+class SignupView(generic.CreateView):
+    template_name = "registration/signup.html"
+    form_class = CustomUserCreationForm
+
+    def get_success_url(self):
+        return reverse("login")
+
+
+class LandingPageView(generic.TemplateView):
+    template_name = "landing.html"
+
+
+class TradingDayListView(LoginRequiredMixin, generic.ListView):
     template_name = "tradingdays/tradingday-list.html"
     context_object_name = "tradingdays"
 
@@ -14,7 +27,7 @@ class TradingDayListView(generic.ListView):
         return TradingDay.objects.all()
 
 
-class TradingDayCreateView(generic.CreateView):
+class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "tradingdays/tradingday_create.html"
     form_class = TradingDayModelForm
 
@@ -22,14 +35,14 @@ class TradingDayCreateView(generic.CreateView):
         return reverse("tradingdays:tradingday-list")
 
 
-class TradingDayDetailView(generic.DetailView):
+class TradingDayDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "tradingdays/tradingday_detail.html"
 
     def get_queryset(self):
         return TradingDay.objects.all()
 
 
-class TradingDayUpdateView(generic.UpdateView):
+class TradingDayUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "tradingdays/tradingday_update.html"
     form_class = TradingDayModelForm
 
@@ -40,7 +53,7 @@ class TradingDayUpdateView(generic.UpdateView):
         return TradingDay.objects.all()
 
 
-class TradingDayDeleteView(generic.DeleteView):
+class TradingDayDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "tradingdays/tradingday_delete.html"
     queryset = TradingDay.objects.all()
 

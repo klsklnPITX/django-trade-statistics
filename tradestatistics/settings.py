@@ -126,3 +126,5 @@ STATICFILES_DIRS = [
 STATIC_ROOT = "static_root"
 
 AUTH_USER_MODEL = "tradingdays.User"
+LOGIN_REDIRECT_URL = "tradingdays:tradingday-list"
+LOGIN_URL = "/login"
