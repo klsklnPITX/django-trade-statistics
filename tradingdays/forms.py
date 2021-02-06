@@ -12,7 +12,7 @@ class TradingDayModelForm(forms.ModelForm):
     class Meta:
         model = TradingDay
         fields = (
-            "user",
+            # "user",
             "lotsize",
             "timeframe",
             "profit",

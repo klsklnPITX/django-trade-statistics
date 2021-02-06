@@ -24,7 +24,8 @@ class TradingDayListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "tradingdays"
 
     def get_queryset(self):
-        return TradingDay.objects.all()
+        user = self.request.user
+        return TradingDay.objects.filter(user=user)
 
 
 class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
@@ -33,6 +34,12 @@ class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse("tradingdays:tradingday-list")
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.user = self.request.user
+        user.save()
+        return super(TradingDayCreateView, self).form_valid(form)
 
 
 class TradingDayDetailView(LoginRequiredMixin, generic.DetailView):
