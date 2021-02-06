@@ -1,0 +1,10 @@
+<a href="{% url 'tradingdays:tradingday-list'  %}">Go back to tradingdays</a>
+<hr />
+{{ tradingday.user }}
+{{ tradingday.lotsize }}
+{{ tradingday.timeframe }}
+{{ tradingday.date_created }}
+{{ tradingday.profit }}
+<hr />
+<a href="{% url 'tradingdays:tradingday-update' tradingday.pk %}">Update</a>
+<a href="{% url 'tradingdays:tradingday-delete' tradingday.pk %}">Delete</a>

@@ -1,0 +1,8 @@
+<a href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+<hr>
+<h1>Create a new trading day</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>

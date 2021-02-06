@@ -1,0 +1,11 @@
+<a href="{% url 'tradingdays:tradingday-create' %}">Create tradingday</a>
+<hr />
+{% for tradingday in tradingdays %}
+  <li>
+    {{ tradingday.user }} {{ tradingday.date_created }} 
+    <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}">
+      {{ tradingday.profit }}
+    </a>
+  </li>
+  
+{% endfor %}

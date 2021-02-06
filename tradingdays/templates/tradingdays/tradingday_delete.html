@@ -1,0 +1,8 @@
+<a href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+<hr>
+<h1>Are you sure you want to delete trading day: {{ tradingday.date_created }}?</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
