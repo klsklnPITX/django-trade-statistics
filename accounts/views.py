@@ -1,9 +1,14 @@
+from django.http.response import Http404
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.db.models import Sum
+from django.shortcuts import HttpResponse
 
 from .models import Account, Deposit, Withdrawal
 from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm
+
+import decimal
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -34,6 +39,33 @@ class AccountDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_queryset(self):
         return Account.objects.filter(user=self.request.user)
+
+
+class AccountView(LoginRequiredMixin, generic.TemplateView):
+    template_name = "accounts/account_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AccountView, self).get_context_data(**kwargs)
+        user = self.request.user
+        context_object_name = "account"
+        account = self.kwargs["pk"]
+
+        account = Account.objects.filter(user=user).get(pk=account)
+        deposits_sum = Deposit.objects.filter(account=account).aggregate(Sum("amount"))
+        withdrawals_sum = Withdrawal.objects.filter(account=account).aggregate(Sum("amount"))
+
+        if not deposits_sum["amount__sum"]:
+            deposits_sum["amount__sum"] = 0
+        if not withdrawals_sum["amount__sum"]:
+            withdrawals_sum["amount__sum"] = 0
+
+        context.update({
+            "account": account,
+            "withdrawals_sum": float(withdrawals_sum["amount__sum"]),
+            "deposits_sum": float(deposits_sum["amount__sum"])
+        })
+
+        return context
 
 
 class AccountUpdateView(LoginRequiredMixin, generic.UpdateView):
