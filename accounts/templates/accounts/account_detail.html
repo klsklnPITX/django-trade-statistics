@@ -22,31 +22,27 @@
     <div class="flex flex-wrap -m-4 text-center">
       <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-            <path d="M8 17l4 4 4-4m-4-5v9"></path>
-            <path d="M20.88 18.09A5 5 0 0018 9h-1.26A8 8 0 103 16.29"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
           </svg>
-          <h2 class="title-font font-medium text-3xl text-gray-900">2.7K</h2>
+          <h2 class="title-font font-medium text-3xl text-gray-900">{{ profit }}€</h2>
           <p class="leading-relaxed">Profit</p>
         </div>
       </div>
       <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.736 6.979C9.208 6.193 9.696 6 10 6c.304 0 .792.193 1.264.979a1 1 0 001.715-1.029C12.279 4.784 11.232 4 10 4s-2.279.784-2.979 1.95c-.285.475-.507 1-.67 1.55H6a1 1 0 000 2h.013a9.358 9.358 0 000 1H6a1 1 0 100 2h.351c.163.55.385 1.075.67 1.55C7.721 15.216 8.768 16 10 16s2.279-.784 2.979-1.95a1 1 0 10-1.715-1.029c-.472.786-.96.979-1.264.979-.304 0-.792-.193-1.264-.979a4.265 4.265 0 01-.264-.521H10a1 1 0 100-2H8.017a7.36 7.36 0 010-1H10a1 1 0 100-2H8.472c.08-.185.167-.36.264-.521z" clip-rule="evenodd" />
           </svg>
-          <h2 class="title-font font-medium text-3xl text-gray-900">1.3K</h2>
+          <h2 class="title-font font-medium text-3xl text-gray-900">{{ balance }}€</h2>
           <p class="leading-relaxed">Balance</p>
         </div>
       </div>
       <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'accounts:deposit-list' account.pk %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg hover:bg-green-100">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-              <path d="M3 18v-6a9 9 0 0118 0v6"></path>
-              <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
             </svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">{{ deposits_sum }}€</h2>
             <p class="leading-relaxed">Deposits</p>
@@ -56,8 +52,8 @@
       <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'accounts:withdrawal-list' account.pk %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg hover:bg-green-100">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-green-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">{{ withdrawals_sum }}€</h2>
             <p class="leading-relaxed">Withdrawals</p>

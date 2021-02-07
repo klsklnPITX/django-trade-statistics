@@ -133,7 +133,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = "static_root"
 
 AUTH_USER_MODEL = "accounts.User"
-LOGIN_REDIRECT_URL = "tradingdays:tradingday-list"
+LOGIN_REDIRECT_URL = "accounts:account-list"
 LOGIN_URL = "/login"
 
 CRISPY_TEMPLATE_PACK = "tailwind"

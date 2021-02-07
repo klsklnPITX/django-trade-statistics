@@ -6,9 +6,8 @@ from django.db.models import Sum
 from django.shortcuts import HttpResponse
 
 from .models import Account, Deposit, Withdrawal
+from tradingdays.models import TradingDay
 from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm
-
-import decimal
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -54,15 +53,28 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         deposits_sum = Deposit.objects.filter(account=account).aggregate(Sum("amount"))
         withdrawals_sum = Withdrawal.objects.filter(account=account).aggregate(Sum("amount"))
 
+        # Get account balance
+        # Deposits + Profits - Withdrawals
+        profit = TradingDay.objects.filter(user=user).filter(account=account).aggregate(Sum("profit"))
+
         if not deposits_sum["amount__sum"]:
             deposits_sum["amount__sum"] = 0
         if not withdrawals_sum["amount__sum"]:
             withdrawals_sum["amount__sum"] = 0
+        if not profit["profit__sum"]:
+            profit["profit__sum"] = 0
+
+        deposits_sum = round(float(deposits_sum["amount__sum"]), 2)
+        withdrawals_sum = round(float(withdrawals_sum["amount__sum"]), 2)
+        profit = round(float(profit["profit__sum"]), 2)
+        balance = round(deposits_sum + profit - withdrawals_sum, 2)
 
         context.update({
             "account": account,
-            "withdrawals_sum": float(withdrawals_sum["amount__sum"]),
-            "deposits_sum": float(deposits_sum["amount__sum"])
+            "withdrawals_sum": withdrawals_sum,
+            "deposits_sum": deposits_sum,
+            "profit": profit,
+            "balance": balance
         })
 
         return context
