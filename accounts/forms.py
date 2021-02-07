@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Account, Withdrawal
+from .models import Account, Withdrawal, Deposit
 
 
 User = get_user_model()
@@ -27,6 +27,18 @@ class AccountModelForm(forms.ModelForm):
 class WithdrawalModelForm(forms.ModelForm):
     class Meta:
         model = Withdrawal
+        fields = (
+            "date",
+            "amount",
+        )
+        widgets = {
+            'date': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+        }
+
+
+class DepositModelForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
         fields = (
             "date",
             "amount",

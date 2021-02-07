@@ -2,8 +2,8 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
-from .models import Account, Withdrawal
-from .forms import AccountModelForm, WithdrawalModelForm
+from .models import Account, Deposit, Withdrawal
+from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -118,5 +118,70 @@ class WithdrawalDeleteView(LoginRequiredMixin, generic.DeleteView):
 
         if Account.objects.filter(user=user).filter(pk=account):
             return Withdrawal.objects.filter(pk=withdrawal).filter(account=account)
+        else:
+            return None
+
+
+# DEPOSITS
+class DepositListView(LoginRequiredMixin, generic.ListView):
+    template_name = "accounts/deposit_list.html"
+    context_object_name = "deposits"
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["pk"]
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Deposit.objects.filter(account=account)
+        else:
+            return None
+
+
+class DepositCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "accounts/deposit_create.html"
+    form_class = DepositModelForm
+
+    def get_success_url(self):
+        return reverse("accounts:deposit-list", kwargs={'pk': self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        account = form.save(commit=False)
+        account_pk = self.kwargs["pk"]
+        account_instance = Account.objects.get(pk=account_pk)
+        account.account = account_instance
+        account.save()
+        return super(DepositCreateView, self).form_valid(form)
+
+
+class DepositUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "accounts/deposit_update.html"
+    form_class = DepositModelForm
+
+    def get_success_url(self):
+        return reverse("accounts:deposit-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        deposit = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Deposit.objects.filter(pk=deposit).filter(account=account)
+        else:
+            return None
+
+
+class DepositDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "accounts/deposit_delete.html"
+
+    def get_success_url(self):
+        return reverse("accounts:deposit-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        deposit = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Deposit.objects.filter(pk=deposit).filter(account=account)
         else:
             return None
