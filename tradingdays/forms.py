@@ -13,10 +13,15 @@ class TradingDayModelForm(forms.ModelForm):
         model = TradingDay
         fields = (
             # "user",
+            "account",
             "lotsize",
             "timeframe",
             "profit",
+            "date_created"
         )
+        widgets = {
+            'date_created': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+        }
 
 
 class CustomUserCreationForm(UserCreationForm):

@@ -38,7 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Local apps
     "tradingdays",
+    "accounts",
+
+    # Third party apps
+    "crispy_forms",
+    "crispy_tailwind",
 ]
 
 MIDDLEWARE = [
@@ -125,6 +132,9 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = "static_root"
 
-AUTH_USER_MODEL = "tradingdays.User"
+AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = "tradingdays:tradingday-list"
 LOGIN_URL = "/login"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
