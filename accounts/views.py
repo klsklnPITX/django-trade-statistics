@@ -2,7 +2,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
-from .models import Account
+from .models import Account, Withdrawal
 from .forms import AccountModelForm
 
 
@@ -54,3 +54,17 @@ class AccountDeleteView(LoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse("accounts:account-list")
+
+
+# WITHDRAWALS
+class WithdrawalListView(LoginRequiredMixin, generic.ListView):
+    template_name = "accounts/withdrawal_list.html"
+    context_object_name = "withdrawals"
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["pk"]
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Withdrawal.objects.filter(account=account)
+        else:
+            return None
