@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
 from .models import Account, Withdrawal
-from .forms import AccountModelForm
+from .forms import AccountModelForm, WithdrawalModelForm
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -13,7 +13,6 @@ class AccountListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         user = self.request.user
         return Account.objects.filter(user=user)
-        # return Account.objects.all()
 
 
 class AccountCreateView(LoginRequiredMixin, generic.CreateView):
@@ -34,7 +33,7 @@ class AccountDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "accounts/account_detail.html"
 
     def get_queryset(self):
-        return Account.objects.all()
+        return Account.objects.filter(user=self.request.user)
 
 
 class AccountUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -45,15 +44,17 @@ class AccountUpdateView(LoginRequiredMixin, generic.UpdateView):
         return reverse("accounts:account-list")
 
     def get_queryset(self):
-        return Account.objects.all()
+        return Account.objects.filter(user=self.request.user)
 
 
 class AccountDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "accounts/account_delete.html"
-    queryset = Account.objects.all()
 
     def get_success_url(self):
         return reverse("accounts:account-list")
+
+    def get_queryset(self):
+        return Account.objects.filter(user=self.request.user)
 
 
 # WITHDRAWALS
@@ -66,5 +67,56 @@ class WithdrawalListView(LoginRequiredMixin, generic.ListView):
         account = self.kwargs["pk"]
         if Account.objects.filter(user=user).filter(pk=account):
             return Withdrawal.objects.filter(account=account)
+        else:
+            return None
+
+
+class WithdrawalCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "accounts/withdrawal_create.html"
+    form_class = WithdrawalModelForm
+
+    def get_success_url(self):
+        return reverse("accounts:withdrawal-list", kwargs={'pk': self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        account = form.save(commit=False)
+        account_pk = self.kwargs["pk"]
+        account_instance = Account.objects.get(pk=account_pk)
+        account.account = account_instance
+        account.save()
+        return super(WithdrawalCreateView, self).form_valid(form)
+
+
+class WithdrawalUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "accounts/withdrawal_update.html"
+    form_class = WithdrawalModelForm
+
+    def get_success_url(self):
+        return reverse("accounts:withdrawal-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        withdrawal = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Withdrawal.objects.filter(pk=withdrawal).filter(account=account)
+        else:
+            return None
+
+
+class WithdrawalDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "accounts/withdrawal_delete.html"
+
+    def get_success_url(self):
+        return reverse("accounts:withdrawal-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        withdrawal = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return Withdrawal.objects.filter(pk=withdrawal).filter(account=account)
         else:
             return None
