@@ -1,3 +1,4 @@
+from accounts.models import Account
 from django.db.models import query
 from django.views import generic
 from django.shortcuts import reverse
@@ -32,6 +33,11 @@ class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "tradingdays/tradingday_create.html"
     form_class = TradingDayModelForm
 
+    def get_form_kwargs(self):
+        kwargs = super(TradingDayCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
     def get_success_url(self):
         return reverse("tradingdays:tradingday-list")
 
@@ -52,6 +58,11 @@ class TradingDayDetailView(LoginRequiredMixin, generic.DetailView):
 class TradingDayUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "tradingdays/tradingday_update.html"
     form_class = TradingDayModelForm
+
+    def get_form_kwargs(self):
+        kwargs = super(TradingDayUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):
         return reverse("tradingdays:tradingday-list")
