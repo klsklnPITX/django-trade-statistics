@@ -31,9 +31,11 @@ class TradingDayModelForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+
     class Meta:
         model = User
-        fields = ("username",)
+        fields = ("username", "email")
         field_classes = {'username': UsernameField}
 
 

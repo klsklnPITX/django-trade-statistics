@@ -20,6 +20,7 @@ env = environ.Env(
 )
 
 READ_DOT_ENV_FILE = env.bool("READ_DOT_ENV_FILE", default=False)
+
 if READ_DOT_ENV_FILE:
     # reading .env file
     environ.Env.read_env()
@@ -158,3 +159,27 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    X_FRAME_OPTIONS = "DENY"
+
+    ALLOWED_HOSTS = ["*"]
+
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+    SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+    EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+    DEFAULT_FROM_EMAIL = env("SENDER_MAIL")
+    # EMAIL_HOST = 'smtp.sendgrid.net'
+    # EMAIL_HOST_USER = 'apikey'
+    # EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+    # EMAIL_PORT = 587
+    # EMAIL_USE_TLS = True
