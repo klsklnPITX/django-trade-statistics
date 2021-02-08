@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="container px-5 py-2 mx-auto">
-      <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="table-auto w-full text-left whitespace-no-wrap">
           <thead>
             <tr>
@@ -24,12 +24,12 @@
           </thead>
           <tbody>
             {% for tradingday in tradingdays %}
-              <tr>
-                <td class="px-4 py-3">{{ tradingday.date_created }}</td>
-                <td class="px-4 py-3">{{ tradingday.profit }}</td>
-                <td class="px-4 py-3">
-                  <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
-                    Details
+              <tr class="bg-white">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ tradingday.date_created }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tradingday.profit }}€</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="text-indigo-600 hover:text-indigo-900">
+                      Edit
                   </a>
                 </td>
               </tr>

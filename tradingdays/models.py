@@ -21,7 +21,7 @@ class TradingDay(models.Model):
     account = models.ForeignKey(Account, on_delete=CASCADE)
     lotsize = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     timeframe = models.CharField(choices=TIMEFRAME_CHOICES, max_length=4, blank=True, null=True)
-    note = models.CharField(max_length=300, blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
     date_created = models.DateField(default=datetime.date.today)
     profit = models.DecimalField(max_digits=10, decimal_places=2)
 

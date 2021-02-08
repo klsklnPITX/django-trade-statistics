@@ -135,6 +135,7 @@ STATIC_ROOT = "static_root"
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = "accounts:account-list"
 LOGIN_URL = "/login"
+LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = "tailwind"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
