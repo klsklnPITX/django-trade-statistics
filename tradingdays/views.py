@@ -1,14 +1,14 @@
 from accounts.models import Account
 from django.db.models import query
 from django.views import generic
-from django.shortcuts import reverse, render, HttpResponse
+from django.shortcuts import redirect, reverse, render, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import default_storage
 from django.conf import settings
 
 from .models import TradingDay
 from .forms import CustomUserCreationForm, TradingDayModelForm, CustomUserCreationForm, CsvUploadForm
-from .modules.tradingdays_modules import parse_csv_file
+from .modules.tradingdays_modules import parse_csv_file, allowed_file
 
 
 class SignupView(generic.CreateView):
@@ -83,12 +83,17 @@ class TradingDayDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 # CSV File upload an parse
-def upload_csv(request):
+def upload_csv_view(request):
     if request.method == "POST":
-        form = CsvUploadForm(request.POST, request.FILES, user=request.user)
+        form = CsvUploadForm(request.user, request.POST, request.FILES)
         if form.is_valid():
-            parse_csv_file(request.FILES["file"])
-            return HttpResponse("ok", status=200)
+            file = request.FILES["file"]
+            account = request.POST["account"]
+            if allowed_file(file):
+                parse_csv_file(file, account, request.user)
+                return redirect("tradingdays:tradingday-list")
+            else:
+                return upload_csv_error_view(request, "Filetype not allowed")
         else:
             form = CsvUploadForm()
         return render(request, "tradingdays/csv_upload.html", {"form": form})
@@ -96,3 +101,7 @@ def upload_csv(request):
     if request.method == "GET":
         form = CsvUploadForm(user=request.user)
         return render(request, "tradingdays/csv_upload.html", {"form": form})
+
+
+def upload_csv_error_view(request, errors):
+    return render(request, "tradingdays/csv_error.html", {"errors": errors})

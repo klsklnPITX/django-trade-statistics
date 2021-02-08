@@ -18,7 +18,8 @@ class TradingDayModelForm(forms.ModelForm):
             "lotsize",
             "timeframe",
             "profit",
-            "date_created"
+            "date_created",
+            "note"
         )
         widgets = {
             'date_created': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
@@ -39,6 +40,7 @@ class CustomUserCreationForm(UserCreationForm):
 class CsvUploadForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(CsvUploadForm, self).__init__(*args, **kwargs)
+        self.fields['account'].queryset = Account.objects.filter(user=user)
 
-    account = forms.ModelMultipleChoiceField(queryset=Account.objects.filter(user=get_user()))
-    file = forms.FileField()
+    account = forms.ModelMultipleChoiceField(queryset=None)
+    file = forms.FileField(label='Select csv file', widget=forms.FileInput(attrs={'accept': '.csv'}))
