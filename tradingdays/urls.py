@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (
     TradingDayListView, TradingDayCreateView, TradingDayDetailView, TradingDayUpdateView,
-    TradingDayDeleteView
+    TradingDayDeleteView, upload_csv
 )
 
 
@@ -14,4 +14,5 @@ urlpatterns = [
     path("<int:pk>/", TradingDayDetailView.as_view(), name="tradingday-detail"),
     path("<int:pk>/update/", TradingDayUpdateView.as_view(), name="tradingday-update"),
     path("<int:pk>/delete/", TradingDayDeleteView.as_view(), name="tradingday-delete"),
+    path("upload/", upload_csv, name="tradingday-upload"),
 ]

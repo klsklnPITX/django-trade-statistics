@@ -34,3 +34,11 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ("username",)
         field_classes = {'username': UsernameField}
+
+
+class CsvUploadForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        super(CsvUploadForm, self).__init__(*args, **kwargs)
+
+    account = forms.ModelMultipleChoiceField(queryset=Account.objects.filter(user=get_user()))
+    file = forms.FileField()

@@ -3,7 +3,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.db.models import Sum
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, render
 
 from .models import Account, Deposit, Withdrawal
 from tradingdays.models import TradingDay

@@ -1,11 +1,14 @@
 from accounts.models import Account
 from django.db.models import query
 from django.views import generic
-from django.shortcuts import reverse
+from django.shortcuts import reverse, render, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import default_storage
+from django.conf import settings
 
 from .models import TradingDay
-from .forms import CustomUserCreationForm, TradingDayModelForm, CustomUserCreationForm
+from .forms import CustomUserCreationForm, TradingDayModelForm, CustomUserCreationForm, CsvUploadForm
+from .modules.tradingdays_modules import parse_csv_file
 
 
 class SignupView(generic.CreateView):
@@ -77,3 +80,19 @@ class TradingDayDeleteView(LoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse("tradingdays:tradingday-list")
+
+
+# CSV File upload an parse
+def upload_csv(request):
+    if request.method == "POST":
+        form = CsvUploadForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            parse_csv_file(request.FILES["file"])
+            return HttpResponse("ok", status=200)
+        else:
+            form = CsvUploadForm()
+        return render(request, "tradingdays/csv_upload.html", {"form": form})
+
+    if request.method == "GET":
+        form = CsvUploadForm(user=request.user)
+        return render(request, "tradingdays/csv_upload.html", {"form": form})
