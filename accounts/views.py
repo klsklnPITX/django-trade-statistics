@@ -50,11 +50,12 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         account = self.kwargs["pk"]
 
         account = Account.objects.filter(user=user).get(pk=account)
-        deposits_sum = Deposit.objects.filter(account=account).aggregate(Sum("amount"))
-        withdrawals_sum = Withdrawal.objects.filter(account=account).aggregate(Sum("amount"))
 
         # Get account balance
         # Deposits + Profits - Withdrawals
+        deposits_sum = Deposit.objects.filter(account=account).aggregate(Sum("amount"))
+        withdrawals_sum = Withdrawal.objects.filter(account=account).aggregate(Sum("amount"))
+
         profit = TradingDay.objects.filter(user=user).filter(account=account).aggregate(Sum("profit"))
 
         if not deposits_sum["amount__sum"]:
@@ -69,12 +70,30 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         profit = round(float(profit["profit__sum"]), 2)
         balance = round(deposits_sum + profit - withdrawals_sum, 2)
 
+        # Create daily profit chart data
+        labels_daily_profit_chart = []
+        data_daily_profit_chart = []
+
+        data_decimal = list(TradingDay.objects.filter(user=user).filter(account=account).values_list("profit"))
+        dates = list(TradingDay.objects.filter(user=user).filter(account=account).values_list("date_created"))
+
+        for n in data_decimal:
+            if n:
+                data_daily_profit_chart.append(float(n[0]))
+            else:
+                data_daily_profit_chart.append(0)
+
+        for d in dates:
+            labels_daily_profit_chart.append(d[0].strftime("%d.%m.%Y"))
+
         context.update({
             "account": account,
             "withdrawals_sum": withdrawals_sum,
             "deposits_sum": deposits_sum,
             "profit": profit,
-            "balance": balance
+            "balance": balance,
+            "data_daily_profit_chart": data_daily_profit_chart,
+            "labels_daily_profit_chart": labels_daily_profit_chart
         })
 
         return context

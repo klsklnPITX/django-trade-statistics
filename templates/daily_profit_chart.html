@@ -1,0 +1,38 @@
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-2 mx-auto">
+    <h2 class="sm:text-2xl text-2xl font-medium title-font mb-1 mt-4 text-gray-900">
+      Daily Profit
+    </h2>
+    <canvas id="myChart">
+
+    </canvas>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ labels_daily_profit_chart|safe }},
+        datasets: [{
+            label: 'Profit €',
+            data: {{ data_daily_profit_chart }},
+            backgroundColor: 'rgba(16,185,129,500)',
+            
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
