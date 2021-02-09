@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <section class="text-gray-600 body-font">
   <div class="container px-5 py-2 mx-auto">
     <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
@@ -65,5 +66,6 @@
     </div>
   </div>
   {% include "daily_profit_chart.html" %}
+  {% include "monthly_profit_chart.html" %}
 </section>
 {% endblock content %}

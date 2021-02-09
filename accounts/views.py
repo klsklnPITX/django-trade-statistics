@@ -8,6 +8,7 @@ from django.shortcuts import HttpResponse, render
 from .models import Account, Deposit, Withdrawal
 from tradingdays.models import TradingDay
 from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm
+from .modules.accounts_modules import AccountDataManager
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -48,43 +49,18 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         user = self.request.user
         context_object_name = "account"
         account = self.kwargs["pk"]
-
         account = Account.objects.filter(user=user).get(pk=account)
 
-        # Get account balance
-        # Deposits + Profits - Withdrawals
-        deposits_sum = Deposit.objects.filter(account=account).aggregate(Sum("amount"))
-        withdrawals_sum = Withdrawal.objects.filter(account=account).aggregate(Sum("amount"))
+        # GET DATA
+        account_data = AccountDataManager(user, account)
+        # Get account balance, profit, withdrawals, deposits sum
+        profit, balance, withdrawals_sum, deposits_sum = account_data.get_account_main_statistics()
 
-        profit = TradingDay.objects.filter(user=user).filter(account=account).aggregate(Sum("profit"))
+        # Get daily profit chart data
+        data_daily_profit_chart, labels_daily_profit_chart = account_data.get_daily_profit_chart_data()
 
-        if not deposits_sum["amount__sum"]:
-            deposits_sum["amount__sum"] = 0
-        if not withdrawals_sum["amount__sum"]:
-            withdrawals_sum["amount__sum"] = 0
-        if not profit["profit__sum"]:
-            profit["profit__sum"] = 0
-
-        deposits_sum = round(float(deposits_sum["amount__sum"]), 2)
-        withdrawals_sum = round(float(withdrawals_sum["amount__sum"]), 2)
-        profit = round(float(profit["profit__sum"]), 2)
-        balance = round(deposits_sum + profit - withdrawals_sum, 2)
-
-        # Create daily profit chart data
-        labels_daily_profit_chart = []
-        data_daily_profit_chart = []
-
-        data_decimal = list(TradingDay.objects.filter(user=user).filter(account=account).values_list("profit"))
-        dates = list(TradingDay.objects.filter(user=user).filter(account=account).values_list("date_created"))
-
-        for n in data_decimal:
-            if n:
-                data_daily_profit_chart.append(float(n[0]))
-            else:
-                data_daily_profit_chart.append(0)
-
-        for d in dates:
-            labels_daily_profit_chart.append(d[0].strftime("%d.%m.%Y"))
+        # Get monthly profit chart data
+        data_monthly_profit_chart, labels_monthly_profit_chart = account_data.get_monthly_profit_chart_data()
 
         context.update({
             "account": account,
@@ -93,7 +69,9 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
             "profit": profit,
             "balance": balance,
             "data_daily_profit_chart": data_daily_profit_chart,
-            "labels_daily_profit_chart": labels_daily_profit_chart
+            "labels_daily_profit_chart": labels_daily_profit_chart,
+            "data_monthly_profit_chart": data_monthly_profit_chart,
+            "labels_monthly_profit_chart": labels_monthly_profit_chart
         })
 
         return context

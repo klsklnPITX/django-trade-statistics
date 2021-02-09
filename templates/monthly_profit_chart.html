@@ -1,23 +1,23 @@
 <section class="text-gray-600 body-font">
   <div class="container px-5 py-2 mx-auto">
     <h2 class="sm:text-2xl text-2xl font-medium title-font mb-1 mt-4 text-gray-900">
-      Daily Profit
+      Monthly Profit
     </h2>
-    <canvas id="dailyChart">
+    <canvas id="monthlyChart">
 
     </canvas>
   </div>
 </section>
 
 <script>
-var ctx = document.getElementById('dailyChart');
+var ctx = document.getElementById('monthlyChart');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {{ labels_daily_profit_chart|safe }},
+        labels: {{ labels_monthly_profit_chart|safe }},
         datasets: [{
             label: 'Profit €',
-            data: {{ data_daily_profit_chart }},
+            data: {{ data_monthly_profit_chart }},
             backgroundColor: 'rgba(16,185,129,500)',
             
             borderColor: 'rgba(75, 192, 192, 1)',
