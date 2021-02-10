@@ -6,7 +6,7 @@ from .views import (
     DepositListView, DepositCreateView, DepositUpdateView, DepositDeleteView, AccountView
 )
 
-app_name = "account"
+app_name = "accounts"
 
 urlpatterns = [
     path("", AccountListView.as_view(), name="account-list"),

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Local apps
     "tradingdays",
     "accounts",
+    "accountboard",
 
     # Third party apps
     "crispy_forms",
