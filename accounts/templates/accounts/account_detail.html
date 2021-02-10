@@ -65,6 +65,12 @@
       </div>
     </div>
   </div>
+  <div class="container px-5 py-2 mx-auto">
+    <h2 class="sm:text-2xl text-2xl font-medium title-font mb-1 mt-4 text-gray-900">
+      Account Statistics
+    </h2>
+    <p>Average Profit per day: {{ averagy_daily_profit }}€</p>
+  </div>
   {% include "daily_profit_chart.html" %}
 </section>
 {% endblock content %}

@@ -1,4 +1,4 @@
-from django.db.models import Sum, Func
+from django.db.models import Sum, Func, Avg
 from django.db import models
 
 from accounts.models import Deposit, Withdrawal
@@ -100,3 +100,13 @@ class AccountDataManager():
                 data_profit.append(round(float(month["total"]), 2))
 
         return data_profit, labels_date
+
+    def get_average_daily_profit(self):
+        """
+        Get account's average daily profit.
+        Returns float.
+        """
+        data = TradingDay.objects.aggregate(Avg("profit"))
+        if data["profit__avg"]:
+            return round(float(data["profit__avg"]), 2)
+        return 0

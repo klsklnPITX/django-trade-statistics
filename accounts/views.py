@@ -62,6 +62,9 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         # Get monthly profit chart data
         data_monthly_profit_chart, labels_monthly_profit_chart = account_data.get_monthly_profit_chart_data()
 
+        # Get average daily profit
+        averagy_daily_profit = account_data.get_average_daily_profit()
+
         context.update({
             "account": account,
             "withdrawals_sum": withdrawals_sum,
@@ -71,7 +74,8 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
             "data_daily_profit_chart": data_daily_profit_chart,
             "labels_daily_profit_chart": labels_daily_profit_chart,
             "data_monthly_profit_chart": data_monthly_profit_chart,
-            "labels_monthly_profit_chart": labels_monthly_profit_chart
+            "labels_monthly_profit_chart": labels_monthly_profit_chart,
+            "averagy_daily_profit": averagy_daily_profit
         })
 
         return context
