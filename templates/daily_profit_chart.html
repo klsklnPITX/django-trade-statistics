@@ -1,23 +1,56 @@
 <section class="text-gray-600 body-font">
-  <div class="container px-5 py-2 mx-auto">
+  <div id="main" class="container px-5 py-2 mx-auto">
     <h2 class="sm:text-2xl text-2xl font-medium title-font mb-1 mt-4 text-gray-900">
-      Daily Profit
+      Profit Chart
     </h2>
-    <canvas id="dailyChart">
+    <select onchange="changeChartType()"  id="profitChartSelection">
+      <option value="daily">Daily</option>
+      <option value="monthly" selected="selected">Monthly</option>
+    </select>
+    <canvas id="profitChart">
 
     </canvas>
   </div>
 </section>
 
 <script>
-var ctx = document.getElementById('dailyChart');
-var myChart = new Chart(ctx, {
+
+
+let chartLabels = {{ labels_monthly_profit_chart|safe }};
+let chartData = {{ data_monthly_profit_chart }};
+
+createChart(chartData, chartLabels)
+
+function changeChartType(){
+  var dropDown= document.getElementById("profitChartSelection");
+  var chartType = dropDown.value;
+
+  if(chartType==="daily"){
+    chartLabels = {{ labels_daily_profit_chart|safe }};
+    chartData ={{ data_daily_profit_chart }};
+  }else{
+    chartLabels = {{ labels_monthly_profit_chart|safe }};
+    chartData ={{ data_monthly_profit_chart }};
+  }
+
+  createChart(chartData, chartLabels)
+}
+
+function createChart(chartData, chartLabels){
+  var canvas = document.getElementById('profitChart');
+  canvas.remove();
+  mainDiv = document.getElementById("main");
+  var ctx = document.createElement("canvas");
+  ctx.setAttribute("id", "profitChart");
+  mainDiv.appendChild(ctx);
+
+  var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {{ labels_daily_profit_chart|safe }},
+        labels: chartLabels,
         datasets: [{
             label: 'Profit €',
-            data: {{ data_daily_profit_chart }},
+            data: chartData,
             backgroundColor: 'rgba(16,185,129,500)',
             
             borderColor: 'rgba(75, 192, 192, 1)',
@@ -33,5 +66,9 @@ var myChart = new Chart(ctx, {
             }]
         }
     }
-});
+  });
+}
+
+
+
 </script>

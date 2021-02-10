@@ -95,7 +95,6 @@ class AccountDataManager():
         data_profit = []
 
         for month in data:
-            print(month)
             labels_date.append(f"{month['month']}/{month['year']}")
             if month["total"]:
                 data_profit.append(round(float(month["total"]), 2))
