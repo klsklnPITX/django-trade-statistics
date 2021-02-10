@@ -160,4 +160,4 @@ class AccountDataManager():
         Take profit and deposits from get_account_main_statistics() method.
         Returns float profit percent.
         """
-        return round(profit / deposits, 3) * 100
+        return round((profit / deposits) * 100, 2)

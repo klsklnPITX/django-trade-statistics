@@ -44,7 +44,7 @@ class AccountBoardManager():
                               .values("account_number"))
             account_number = account_number[0]["account_number"]
 
-            # Fill contex for html
+            # Fill context for html
             accounts_data_list.append({
                 "user": username,
                 "account_number": account_number,
