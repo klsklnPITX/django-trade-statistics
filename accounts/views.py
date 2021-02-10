@@ -75,6 +75,9 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
                 data_daily_profit_chart
             )
 
+        # Get profit percent
+        profit_percent = account_data.get_profit_percent(profit, deposits_sum)
+
         context.update({
             "account": account,
             "withdrawals_sum": withdrawals_sum,
@@ -88,7 +91,8 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
             "averagy_daily_profit": averagy_daily_profit,
             "tradingday_count": tradingday_count,
             "data_accumulated_profit_chart": data_accumulated_profit_chart,
-            "labels_accumulated_profit_chart": labels_accumulated_profit_chart
+            "labels_accumulated_profit_chart": labels_accumulated_profit_chart,
+            "profit_percent": profit_percent
         })
 
         return context

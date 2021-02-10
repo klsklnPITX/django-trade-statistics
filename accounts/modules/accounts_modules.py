@@ -153,3 +153,11 @@ class AccountDataManager():
             tradingday_count.append(i)
 
         return accumulated_profit, tradingday_count
+
+    def get_profit_percent(self, profit, deposits):
+        """
+        Get account's profit in percent.
+        Take profit and deposits from get_account_main_statistics() method.
+        Returns float profit percent.
+        """
+        return round(profit / deposits, 3) * 100
