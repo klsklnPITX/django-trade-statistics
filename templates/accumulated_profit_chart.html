@@ -1,0 +1,36 @@
+  <div class="w-1/2">
+    <!-- <h2 class="sm:text-lg text-lg font-medium title-font mb-1 mt-4 ml-2 text-gray-900">
+      Accumulated Profit
+    </h2> -->
+    <canvas id="accumulatedProfitChart">
+
+    </canvas>
+  </div>
+
+
+<script>
+var ctx = document.getElementById('accumulatedProfitChart');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ labels_accumulated_profit_chart|safe }},
+        datasets: [{
+            label: 'Accumulated Profit per day',
+            data: {{ data_accumulated_profit_chart }},
+            backgroundColor: 'rgba(16,185,129,500)',
+            
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>

@@ -65,12 +65,39 @@
       </div>
     </div>
   </div>
-  <div class="container px-5 py-2 mx-auto">
-    <h2 class="sm:text-2xl text-2xl font-medium title-font mb-1 mt-4 text-gray-900">
-      Account Statistics
-    </h2>
-    <p>Average Profit per day: {{ averagy_daily_profit }}€</p>
+  <div class="container w-full flex justify-between px-5 py-2 mx-auto">
+    <div class="w-1/2 bg-white shadow overflow-hidden sm:rounded-lg mr-7">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Account Statistics
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          Personal account statitics based on trading results
+        </p>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+              Average Profit per day
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {{ averagy_daily_profit }}€
+            </dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">
+              Trading days
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {{ tradingday_count }}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    {% include "accumulated_profit_chart.html" %}
   </div>
-  {% include "daily_profit_chart.html" %}
+  {% include "daymonth_profit_chart.html" %}
 </section>
 {% endblock content %}

@@ -4,6 +4,8 @@ from django.db import models
 from accounts.models import Deposit, Withdrawal
 from tradingdays.models import TradingDay
 
+from itertools import accumulate
+
 
 class Month(Func):
     function = 'EXTRACT'
@@ -29,7 +31,7 @@ class AccountDataManager():
     def get_account_main_statistics(self):
         """
         Get accounts's sum of:
-        * Profit 
+        * Profit
         * Balance
         * Withdrawals
         * Deposits
@@ -63,8 +65,16 @@ class AccountDataManager():
         labels_daily_profit_chart = []
         data_daily_profit_chart = []
 
-        data_decimal = list(TradingDay.objects.filter(user=self.user).filter(account=self.account).values_list("profit"))
-        dates = list(TradingDay.objects.filter(user=self.user).filter(account=self.account).values_list("date_created"))
+        data_decimal = list((TradingDay.objects
+                             .filter(user=self.user)
+                             .filter(account=self.account)
+                             .values_list("profit")
+                             .order_by("date_created")))
+        dates = list((TradingDay.objects
+                      .filter(user=self.user)
+                      .filter(account=self.account)
+                      .values_list("date_created")
+                      .order_by("date_created")))
 
         for n in data_decimal:
             if n:
@@ -79,7 +89,7 @@ class AccountDataManager():
 
     def get_monthly_profit_chart_data(self):
         """
-        Get accounts's monthly profit with their month and year 
+        Get accounts's monthly profit with their month and year
         for the monthly profit chart.
         Returns data and label values for the js chart.
         """
@@ -114,3 +124,32 @@ class AccountDataManager():
         if data["profit__avg"]:
             return round(float(data["profit__avg"]), 2)
         return 0
+
+    def get_tradingday_count(self):
+        """
+        Get count of account's trading days.
+        Returns int count
+        """
+        data = (TradingDay.objects
+                .filter(user=self.user)
+                .filter(account=self.account)
+                .count())
+        return data
+
+    def get_accumulated_profit(self, trading_day_count, trading_day_profit):
+        """
+        Get accumulated account's profit per day.
+        Takes trading day count (Get from get_tradingday_count() method.
+        Takes trading day profit (Get from get_daily_profit_chart_data() method).
+        Returns accumulated profit per day and current day count value.
+        """
+        accumulated_profit = []
+        profits = accumulate(trading_day_profit)
+        for n in profits:
+            accumulated_profit.append(round(n, 2))
+
+        tradingday_count = []
+        for i in range(1, trading_day_count+1):
+            tradingday_count.append(i)
+
+        return accumulated_profit, tradingday_count
