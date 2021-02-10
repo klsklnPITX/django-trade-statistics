@@ -106,7 +106,11 @@ class AccountDataManager():
         Get account's average daily profit.
         Returns float.
         """
-        data = TradingDay.objects.aggregate(Avg("profit"))
+        data = (TradingDay.objects
+                .filter(user=self.user)
+                .filter(account=self.account)
+                .aggregate(Avg("profit")))
+
         if data["profit__avg"]:
             return round(float(data["profit__avg"]), 2)
         return 0
