@@ -29,7 +29,7 @@ class TradingDayListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return TradingDay.objects.filter(user=user)
+        return TradingDay.objects.filter(user=user).order_by("date_created")
 
 
 class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
