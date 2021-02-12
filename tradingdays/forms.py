@@ -46,3 +46,4 @@ class CsvUploadForm(forms.Form):
 
     account = forms.ModelMultipleChoiceField(queryset=None)
     file = forms.FileField(label='Select csv file', widget=forms.FileInput(attrs={'accept': '.csv'}))
+    check_delete_account_data = forms.BooleanField(required=False, label='Delete previous account data? (Tradingdays, withdrawals, deposits)')

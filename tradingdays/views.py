@@ -8,7 +8,7 @@ from django.conf import settings
 
 from .models import TradingDay
 from .forms import CustomUserCreationForm, TradingDayModelForm, CustomUserCreationForm, CsvUploadForm
-from .modules.tradingdays_modules import parse_csv_file, allowed_file
+from .modules.tradingdays_modules import parse_csv_file, allowed_file, delete_previous_account_data
 
 
 class SignupView(generic.CreateView):
@@ -90,6 +90,9 @@ def upload_csv_view(request):
             file = request.FILES["file"]
             account = request.POST["account"]
             if allowed_file(file):
+                if "check_delete_account_data" in request.POST:
+                    # Delete previous account data
+                    delete_previous_account_data(request, account)
                 parse_csv_file(file, account, request.user)
                 return redirect("tradingdays:tradingday-list")
             else:

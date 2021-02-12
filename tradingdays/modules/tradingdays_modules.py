@@ -10,7 +10,7 @@ ALLOWED_EXTENSIONS = ["csv"]
 def parse_csv_file(csv_file, account, user):
     """
     Takes a csv file from myfxbook and parses its content.
-    Sums up daily profit, deposit and withdrawal with its date 
+    Sums up daily profit, deposit and withdrawal with its date
     and passes it to selected account's trading days model and Deposit/Withdrawal models.
     """
 
@@ -87,3 +87,24 @@ def allowed_file(filename):
 
     return '.' in str(filename) and \
            str(filename).rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def delete_previous_account_data(request, account):
+    """
+    Delete tradingdays, withdrawals, deposits from current account.
+    Used in upload csv view.
+    Take request and account as parameter
+    """
+    user = request.user
+
+    (TradingDay.objects
+     .filter(user=user)
+     .filter(account=account)
+     .delete())
+    (Withdrawal.objects
+     .filter(account=account)
+     .delete())
+
+    (Deposit.objects
+     .filter(account=account)
+     .delete())
