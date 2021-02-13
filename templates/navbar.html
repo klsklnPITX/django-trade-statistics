@@ -12,7 +12,6 @@
       {% else %}
         <a href="{% url 'accountboard:accountboard-list' %}" class="mr-5 hover:text-gray-900">Accountboard</a>
         <a href="{% url 'accounts:account-list' %}" class="mr-5 hover:text-gray-900">Accounts</a>
-        <a href="{% url 'tradingdays:tradingday-list' %}" class="mr-5 hover:text-gray-900">Trading Days</a>
       {% endif %}
     </nav>
     {% if request.user.is_authenticated %}

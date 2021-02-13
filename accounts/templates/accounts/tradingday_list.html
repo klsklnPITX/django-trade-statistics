@@ -5,11 +5,14 @@
   <div class="container px-5 py-2 mx-auto flex flex-wrap">
     <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
       <div>
-        <h1 class="text-4xl text-gray-800">Trading Days</h1>
+        <h1 class="text-4xl text-gray-800">Tradingday</h1>
+        <a class="text-gray-500 hover:text-blue-500" href="{% url 'accounts:account-detail' view.kwargs.pk %}">
+          Go back to account
+        </a>
       </div>
       <div>
-        <a class="mr-5 text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-create' %}">Add a new trading day</a>
-        <a class="text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-upload' %}">Parse trading days from csv file</a>
+        <a class="mr-5 text-gray-500 hover:text-blue-500" href="{% url 'accounts:tradingday-create' view.kwargs.pk %}">Add a new trading day</a>
+        <a class="text-gray-500 hover:text-blue-500" href="{% url 'accounts:tradingday-upload' %}">Parse trading days from csv file</a>
       </div>
     </div>
     <div class="container px-5 py-2 mx-auto">
@@ -28,7 +31,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ tradingday.date_created }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ tradingday.profit }}€</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="text-indigo-600 hover:text-indigo-900">
+                  <a href="{% url 'accounts:tradingday-detail' view.kwargs.pk tradingday.pk %}" class="text-indigo-600 hover:text-indigo-900">
                       Edit
                   </a>
                 </td>

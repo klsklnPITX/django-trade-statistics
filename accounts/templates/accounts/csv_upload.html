@@ -8,7 +8,7 @@
   <div class="container px-5 py-2 mx-auto flex flex-wrap">
     <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
       <div>
-        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'accounts:account-list' %}">Go back to accounts</a>
       </div>
     </div>
     <div class="max-w-lg mx-auto">
@@ -16,7 +16,7 @@
           <h1 class="text-4xl text-gray-800">Upload trading days</h1>
           <p class="mt-2">Must be a .csv file from myfxbook.com</p>
       </div>
-      <form action="{% url 'tradingdays:tradingday-upload' %}" method="post" enctype="multipart/form-data">
+      <form action="{% url 'accounts:tradingday-upload' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form|crispy }}
           <button type='submit' class="w-full text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">

@@ -6,7 +6,7 @@
   <div class="container px-5 py-2 mx-auto flex flex-wrap">
     <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
       <div>
-        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'accounts:tradingday-list' view.kwargs.pk %}">Go back to trading days</a>
       </div>
     </div>
     <div class="max-w-lg mx-auto">

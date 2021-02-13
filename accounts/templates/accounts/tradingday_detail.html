@@ -5,7 +5,7 @@
   <div class="container px-5 py-2 mx-auto flex flex-wrap">
     <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
       <div>
-        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+        <a class="ml-10 text-gray-500 hover:text-blue-500" href="{% url 'accounts:tradingday-list' tradingday.account.pk %}">Go back to trading days</a>
       </div>
     </div>
     <div class="container px-5 py-15 mx-auto">
@@ -14,8 +14,8 @@
           <h2 class="text-sm title-font text-gray-500 tracking-widest">TRADING DAY</h2>
           <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ tradingday.date_created }}</h1>
           <div class="flex mb-4">
-            <a href="{% url 'tradingdays:tradingday-detail' tradingday.pk %}" class="flex-grow text-green-500 border-b-2 border-green-500 py-2 text-lg px-1">Details</a>
-            <a href="{% url 'tradingdays:tradingday-update' tradingday.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Edit</a>
+            <a href="{% url 'accounts:tradingday-detail' tradingday.account.pk tradingday.pk %}" class="flex-grow text-green-500 border-b-2 border-green-500 py-2 text-lg px-1">Details</a>
+            <a href="{% url 'accounts:tradingday-update' tradingday.account.pk tradingday.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Edit</a>
           </div>
           <p class="leading-relaxed mb-4"></p>
           <div class="flex border-t border-gray-200 py-2">

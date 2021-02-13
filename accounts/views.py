@@ -1,14 +1,24 @@
-from django.http.response import Http404
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.db.models import Sum
-from django.shortcuts import HttpResponse, render
 
-from .models import Account, Deposit, Withdrawal
-from tradingdays.models import TradingDay
-from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm
+from django.shortcuts import render, redirect
+
+from .models import Account, Deposit, Withdrawal, TradingDay
+from .forms import AccountModelForm, WithdrawalModelForm, DepositModelForm, CsvUploadForm, TradingDayModelForm, CustomUserCreationForm
 from .modules.accounts_modules import AccountDataManager
+
+
+class SignupView(generic.CreateView):
+    template_name = "registration/signup.html"
+    form_class = CustomUserCreationForm
+
+    def get_success_url(self):
+        return reverse("login")
+
+
+class LandingPageView(generic.TemplateView):
+    template_name = "landing.html"
 
 
 class AccountListView(LoginRequiredMixin, generic.ListView):
@@ -34,11 +44,11 @@ class AccountCreateView(LoginRequiredMixin, generic.CreateView):
         return super(AccountCreateView, self).form_valid(form)
 
 
-class AccountDetailView(LoginRequiredMixin, generic.DetailView):
-    template_name = "accounts/account_detail.html"
+# class AccountDetailView(LoginRequiredMixin, generic.DetailView):
+#     template_name = "accounts/account_detail.html"
 
-    def get_queryset(self):
-        return Account.objects.filter(user=self.request.user)
+#     def get_queryset(self):
+#         return Account.objects.filter(user=self.request.user)
 
 
 class AccountView(LoginRequiredMixin, generic.TemplateView):
@@ -128,7 +138,7 @@ class WithdrawalListView(LoginRequiredMixin, generic.ListView):
         user = self.request.user
         account = self.kwargs["pk"]
         if Account.objects.filter(user=user).filter(pk=account):
-            return Withdrawal.objects.filter(account=account)
+            return Withdrawal.objects.filter(account=account).order_by("date")
         else:
             return None
 
@@ -193,7 +203,7 @@ class DepositListView(LoginRequiredMixin, generic.ListView):
         user = self.request.user
         account = self.kwargs["pk"]
         if Account.objects.filter(user=user).filter(pk=account):
-            return Deposit.objects.filter(account=account)
+            return Deposit.objects.filter(account=account).order_by("date")
         else:
             return None
 
@@ -247,3 +257,118 @@ class DepositDeleteView(LoginRequiredMixin, generic.DeleteView):
             return Deposit.objects.filter(pk=deposit).filter(account=account)
         else:
             return None
+
+# TRADINGDAYS
+
+
+class TradingDayListView(LoginRequiredMixin, generic.ListView):
+    template_name = "accounts/tradingday_list.html"
+    context_object_name = "tradingdays"
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["pk"]
+        return (TradingDay.objects
+                .filter(user=user)
+                .filter(account=account)
+                .order_by("date_created"))
+
+
+class TradingDayCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "accounts/tradingday_create.html"
+    form_class = TradingDayModelForm
+
+    def get_form_kwargs(self):
+        kwargs = super(TradingDayCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("accounts:tradingday-list", kwargs={'pk': self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.user = self.request.user
+        user.save()
+        return super(TradingDayCreateView, self).form_valid(form)
+
+
+class TradingDayDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "accounts/tradingday_detail.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        tradingday = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return TradingDay.objects.filter(pk=tradingday).filter(account=account)
+        else:
+            return None
+
+
+class TradingDayUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "accounts/tradingday_update.html"
+    form_class = TradingDayModelForm
+
+    def get_form_kwargs(self):
+        kwargs = super(TradingDayUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("accounts:tradingday-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+    def get_queryset(self):
+        user = self.request.user
+        account = self.kwargs["a_pk"]
+        tradingday = self.kwargs["pk"]
+
+        if Account.objects.filter(user=user).filter(pk=account):
+            return TradingDay.objects.filter(pk=tradingday).filter(account=account)
+        else:
+            return None
+
+
+class TradingDayDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "accounts/tradingday_delete.html"
+
+    def get_queryset(self):
+        tradingday = self.kwargs["pk"]
+        account = self.kwargs["a_pk"]
+
+        return (TradingDay.objects
+                .filter(account=account)
+                .filter(pk=tradingday))
+
+    def get_success_url(self):
+        return reverse("accounts:tradingday-list", kwargs={'pk': self.kwargs["a_pk"]})
+
+
+# CSV File upload an parse
+def upload_csv_view(request):
+    if request.method == "POST":
+        form = CsvUploadForm(request.user, request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES["file"]
+            account = request.POST["account"]
+            if AccountDataManager.allowed_file(file):
+                acc_data_mgr = AccountDataManager(request.user, account)
+                if "check_delete_account_data" in request.POST:
+                    # Delete previous account data
+                    acc_data_mgr.delete_previous_account_data()
+                acc_data_mgr.parse_csv_file(file)
+                return redirect("accounts:account-list")
+            else:
+                return upload_csv_error_view(request, "Filetype not allowed")
+        else:
+            form = CsvUploadForm()
+        return render(request, "accounts/csv_upload.html", {"form": form})
+
+    if request.method == "GET":
+        form = CsvUploadForm(user=request.user)
+        return render(request, "accounts/csv_upload.html", {"form": form})
+
+
+def upload_csv_error_view(request, errors):
+    return render(request, "accounts/csv_error.html", {"errors": errors})

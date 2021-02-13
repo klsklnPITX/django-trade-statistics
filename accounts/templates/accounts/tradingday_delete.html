@@ -4,7 +4,7 @@
 {% block content %}
 <div class="max-w-lg mx-auto">
   <div class="py-5 border-b border-gray-200">
-    <a href="{% url 'tradingdays:tradingday-list' %}">Go back to trading days</a>
+    <a href="{% url 'accounts:tradingday-list' tradingday.account.pk %}">Go back to trading days</a>
   </div>
   <h1>Are you sure you want to delete trading day: {{ tradingday.date_created }}?</h1>
   <form method="post">

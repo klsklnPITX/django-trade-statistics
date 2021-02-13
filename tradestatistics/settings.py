@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Local apps
-    "tradingdays",
     "accounts",
     "accountboard",
 
