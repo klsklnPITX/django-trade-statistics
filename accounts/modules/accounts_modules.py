@@ -308,31 +308,48 @@ class AccountDataManager():
         result_dict = {}
 
         for year, profit in yearly_profit.items():
-            profit_after_decuction = profit - freibetrag
-            cap_gains_tax_deduction = profit_after_decuction * cap_gains_tax_rate
-            soli_deduction = cap_gains_tax_deduction * soli
-            kirche_deduction = cap_gains_tax_deduction * kirchensteuer
-            tax_sum = cap_gains_tax_deduction + soli_deduction + kirche_deduction
-            net_profit = profit - tax_sum
+            if profit <= freibetrag:
+                result_dict[year] = {
+                    "profit": profit,
+                    "profit_after_deduction": "-",
+                    "cap_gains_deduction": "-",
+                    "soli_deduction": "-",
+                    "kirche_deduction": "-",
+                    "tax_sum": "-",
+                    "net_profit": profit,
+                    "tax_ratio_profit": "-",
+                    "tax_ratio_profit_with_freibetrag": "-",
+                    "cap_gains_tax_rate": cap_gains_tax_rate * 100,
+                    "soli_rate": soli * 100,
+                    "kirchensteuer_rate": kirchensteuer * 100,
+                    "freibetrag_euro": 801
+                }
+            else:
+                profit_after_decuction = profit - freibetrag
+                cap_gains_tax_deduction = profit_after_decuction * cap_gains_tax_rate
+                soli_deduction = cap_gains_tax_deduction * soli
+                kirche_deduction = cap_gains_tax_deduction * kirchensteuer
+                tax_sum = cap_gains_tax_deduction + soli_deduction + kirche_deduction
+                net_profit = profit - tax_sum
 
-            tax_ratio_profit = round(tax_sum / profit, 2)
-            tax_ratio_profit_with_freibetrag = round(tax_sum / profit_after_decuction, 2)
+                tax_ratio_profit = round(tax_sum / profit, 2)
+                tax_ratio_profit_with_freibetrag = round(tax_sum / profit_after_decuction, 2)
 
-            result_dict[year] = {
-                "profit": profit,
-                "profit_after_deduction": round(profit_after_decuction, 2),
-                "cap_gains_deduction": round(cap_gains_tax_deduction, 2),
-                "soli_deduction": round(soli_deduction, 2),
-                "kirche_deduction": round(kirche_deduction, 2),
-                "tax_sum": round(tax_sum, 2),
-                "net_profit": round(net_profit, 2),
-                "tax_ratio_profit": round(tax_ratio_profit * 100, 2),
-                "tax_ratio_profit_with_freibetrag": round(tax_ratio_profit_with_freibetrag * 100, 2),
-                "cap_gains_tax_rate": cap_gains_tax_rate * 100,
-                "soli_rate": soli * 100,
-                "kirchensteuer_rate": kirchensteuer * 100,
-                "freibetrag_euro": 801
+                result_dict[year] = {
+                    "profit": profit,
+                    "profit_after_deduction": round(profit_after_decuction, 2),
+                    "cap_gains_deduction": round(cap_gains_tax_deduction, 2),
+                    "soli_deduction": round(soli_deduction, 2),
+                    "kirche_deduction": round(kirche_deduction, 2),
+                    "tax_sum": round(tax_sum, 2),
+                    "net_profit": round(net_profit, 2),
+                    "tax_ratio_profit": round(tax_ratio_profit * 100, 2),
+                    "tax_ratio_profit_with_freibetrag": round(tax_ratio_profit_with_freibetrag * 100, 2),
+                    "cap_gains_tax_rate": cap_gains_tax_rate * 100,
+                    "soli_rate": soli * 100,
+                    "kirchensteuer_rate": kirchensteuer * 100,
+                    "freibetrag_euro": 801
 
-            }
+                }
 
         return result_dict
