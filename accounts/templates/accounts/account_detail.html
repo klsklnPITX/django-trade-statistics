@@ -105,7 +105,61 @@
       </div>
     </div>
     {% include "accumulated_profit_chart.html" %}
+
   </div>
   {% include "daymonth_profit_chart.html" %}
+
+
+  <div class="container px-5 py-2 mx-auto flex justify-between">
+    {% for year, profit in tax_per_year_data.items %}
+    <div class="lg:w-1/2 sm:w-full xl:w-1/2">
+      <div class="w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
+        <h2 class="text-sm title-font text-gray-500 tracking-widest">TAX</h2>
+        <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{year}}</h1>
+        <div class="flex mb-4">
+          <a class="flex-grow text-green-500 border-b-2 border-green-500 py-2 text-lg px-1">German Tax Calculation</a>
+        </div>
+        <div class="flex border-t border-gray-200 py-2">
+          <span class="text-gray-500">Gross Profit</span>
+          <span class="ml-auto text-gray-900">{{ profit.profit }}€</span>
+        </div>
+        <div class="flex border-t border-gray-200 py-2">
+          <span class="text-gray-500">Freibetrag</span>
+          <span class="ml-auto text-gray-900">- {{ profit.freibetrag_euro }}€</span>
+        </div>
+        <div class="flex border-t border-b mb-6 border-gray-200 py-2">
+          <span class="text-gray-500">Gross Profit after deduction</span>
+          <span class="ml-auto text-gray-900">= {{ profit.profit_after_deduction }}€</span>
+        </div>
+        <div class="flex border-t border-gray-200 py-2">
+          <span class="text-gray-500">Capital Gains Tax - {{ profit.cap_gains_tax_rate }}%</span>
+          <span class="ml-auto text-gray-900">{{ profit.cap_gains_deduction }}€</span>
+        </div>
+        <div class="flex border-t border-gray-200 py-2">
+          <span class="text-gray-500">Solidaritätszuschlag - {{ profit.soli_rate }}%</span>
+          <span class="ml-auto text-gray-900">{{ profit.soli_deduction }}€</span>
+        </div>
+        <div class="flex border-t border-b mb-6 border-gray-200 py-2">
+          <span class="text-gray-500">Kirchensteuer - {{ profit.kirchensteuer_rate }}%</span>
+          <span class="ml-auto text-gray-900">{{ profit.kirche_deduction }}€</span>
+        </div>
+        <div class="flex border-t border-b border-gray-200 py-2">
+          <span class="text-gray-500">Tax Sum</span>
+          <span class="ml-auto text-gray-900">- {{ profit.tax_sum }}€</span>
+        </div>
+        <div class="flex border-t border-b mb-6 border-gray-200 py-2">
+          <span class="text-gray-500">Tax Ratios</span>
+          <span class="ml-auto text-gray-900">Excl. Freibetrag {{ profit.tax_ratio_profit }}%, Incl. Freibetrag {{ profit.tax_ratio_profit_with_freibetrag }}%</span>
+        </div>
+        <div class="flex border-gray-200">
+          <span class="text-gray-800 font-extrabold border-b-2">Net Profit</span>
+          <span class="ml-auto text-gray-800 font-extrabold border-b-2">= {{ profit.net_profit }}€</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+
 </section>
 {% endblock content %}

@@ -88,6 +88,8 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
         # Get profit percent
         profit_percent = account_data.get_profit_percent(profit, deposits_sum)
 
+        tax_per_year_data = account_data.calculate_yearly_tax(account_data.get_yearly_profit())
+
         context.update({
             "account": account,
             "withdrawals_sum": withdrawals_sum,
@@ -102,7 +104,8 @@ class AccountView(LoginRequiredMixin, generic.TemplateView):
             "tradingday_count": tradingday_count,
             "data_accumulated_profit_chart": data_accumulated_profit_chart,
             "labels_accumulated_profit_chart": labels_accumulated_profit_chart,
-            "profit_percent": profit_percent
+            "profit_percent": profit_percent,
+            "tax_per_year_data": tax_per_year_data
         })
 
         return context

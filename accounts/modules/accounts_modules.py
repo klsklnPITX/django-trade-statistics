@@ -92,7 +92,7 @@ class AccountDataManager():
 
     def get_monthly_profit_chart_data(self):
         """
-        Get accounts's monthly profit with their month and year
+        Get account's monthly profit with their month and year
         for the monthly profit chart.
         Returns data and label values for the js chart.
         """
@@ -113,6 +113,30 @@ class AccountDataManager():
                 data_profit.append(round(float(month["total"]), 2))
 
         return data_profit, labels_date
+
+    def get_yearly_profit(self):
+        """
+        Get account's yearly profit with corresponding year.
+        Returns dictionary {year: profit}.
+        """
+
+        data = (TradingDay.objects
+                .filter(user=self.user)
+                .filter(account=self.account)
+                .annotate(year=Year("date_created"))
+                .values("year")
+                .annotate(total=Sum("profit"))
+                .order_by("year"))
+
+        data_dict = {}
+        for year in data:
+            try:
+                total = round(float(year["total"]), 2)
+            except:
+                total = 0
+            data_dict[year["year"]] = total
+
+        return data_dict
 
     def get_average_daily_profit(self):
         """
@@ -268,3 +292,47 @@ class AccountDataManager():
         (Deposit.objects
          .filter(account=account)
          .delete())
+
+    def calculate_yearly_tax(self, yearly_profit):
+        """
+        Calcutales account's yearly tax expenses.
+        Uses German capital gains tax and German regulations.
+
+        Takes yearly profit dictionary from get_yearly_profit() method.
+        """
+        freibetrag = 801
+        cap_gains_tax_rate = 0.25
+        soli = 0.055
+        kirchensteuer = 0.08
+
+        result_dict = {}
+
+        for year, profit in yearly_profit.items():
+            profit_after_decuction = profit - freibetrag
+            cap_gains_tax_deduction = profit_after_decuction * cap_gains_tax_rate
+            soli_deduction = cap_gains_tax_deduction * soli
+            kirche_deduction = cap_gains_tax_deduction * kirchensteuer
+            tax_sum = cap_gains_tax_deduction + soli_deduction + kirche_deduction
+            net_profit = profit - tax_sum
+
+            tax_ratio_profit = round(tax_sum / profit, 2)
+            tax_ratio_profit_with_freibetrag = round(tax_sum / profit_after_decuction, 2)
+
+            result_dict[year] = {
+                "profit": profit,
+                "profit_after_deduction": round(profit_after_decuction, 2),
+                "cap_gains_deduction": round(cap_gains_tax_deduction, 2),
+                "soli_deduction": round(soli_deduction, 2),
+                "kirche_deduction": round(kirche_deduction, 2),
+                "tax_sum": round(tax_sum, 2),
+                "net_profit": round(net_profit, 2),
+                "tax_ratio_profit": round(tax_ratio_profit * 100, 2),
+                "tax_ratio_profit_with_freibetrag": round(tax_ratio_profit_with_freibetrag * 100, 2),
+                "cap_gains_tax_rate": cap_gains_tax_rate * 100,
+                "soli_rate": soli * 100,
+                "kirchensteuer_rate": kirchensteuer * 100,
+                "freibetrag_euro": 801
+
+            }
+
+        return result_dict
