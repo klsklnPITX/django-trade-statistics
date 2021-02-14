@@ -65,8 +65,8 @@
       </div>
     </div>
   </div>
-  <div class="container w-full flex justify-between px-5 py-2 mx-auto">
-    <div class="w-1/2 bg-white shadow overflow-hidden sm:rounded-lg mr-7">
+  <div class="container w-full lg:flex xl:flex 2xl:flex justify-between px-5 py-2 mx-auto">
+    <div class="lg:w-1/2 sm:w-full xl:w-1/2 2xl:w-1/2 bg-white shadow overflow-hidden sm:rounded-lg mr-7">
       <div class="px-4 py-5 sm:px-6">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
           Account Statistics
@@ -110,9 +110,9 @@
   {% include "daymonth_profit_chart.html" %}
 
 
-  <div class="container px-5 py-2 mx-auto flex justify-between">
+  <div class="container px-5 py-2 mx-auto lg:flex xl:flex 2xl:flex justify-between">
     {% for year, profit in tax_per_year_data.items %}
-    <div class="lg:w-1/2 sm:w-full xl:w-1/2">
+    <div class="lg:w-1/2 sm:w-full xl:w-1/2 2xl:w-1/2">
       <div class="w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
         <h2 class="text-sm title-font text-gray-500 tracking-widest">TAX</h2>
         <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{year}}</h1>

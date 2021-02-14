@@ -295,7 +295,7 @@ class AccountDataManager():
 
     def calculate_yearly_tax(self, yearly_profit):
         """
-        Calcutales account's yearly tax expenses.
+        Calculatees account's yearly tax expenses.
         Uses German capital gains tax and German regulations.
 
         Takes yearly profit dictionary from get_yearly_profit() method.
